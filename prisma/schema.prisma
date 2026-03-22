@@ -26,4 +26,6 @@ model questions {
   questions   String
   answer      String
   category    String
+  options     Json
+  explanation String
 }

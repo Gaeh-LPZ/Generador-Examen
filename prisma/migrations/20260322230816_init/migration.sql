@@ -16,6 +16,8 @@ CREATE TABLE "questions" (
     "questions" TEXT NOT NULL,
     "answer" TEXT NOT NULL,
     "category" TEXT NOT NULL,
+    "options" JSONB NOT NULL,
+    "explanation" TEXT NOT NULL,
 
     CONSTRAINT "questions_pkey" PRIMARY KEY ("id")
 );

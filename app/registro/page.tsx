@@ -68,6 +68,7 @@ export default function RegisterPage() {
             <input
               type="text"
               name="nombre"
+              id='nombre'
               value={formData.nombre}
               onChange={handleChange}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-black"
@@ -84,6 +85,7 @@ export default function RegisterPage() {
             <input
               type="email"
               name="email"
+              id='email'
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-black"
@@ -100,6 +102,7 @@ export default function RegisterPage() {
             <input
               type="password"
               name="password"
+              id='password'
               value={formData.password}
               onChange={handleChange}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-black"

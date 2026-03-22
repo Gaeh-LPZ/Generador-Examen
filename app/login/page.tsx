@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { login } from '@/app/lib/actions'; 
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,13 +28,19 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      console.log('Intentando iniciar sesión con:', formData);
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      router.push('/dashboard'); 
+      const formDataToSend = new FormData();
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('password', formData.password);
+
+      const result = await login(formDataToSend);
+
+      if (result && !result.success) {
+        setError(result.message || 'Error al iniciar sesión');
+      }
       
     } catch (err) {
-      setError('Credenciales incorrectas. Revisa tu correo o contraseña.');
+      console.error(err);
+      setError('Ocurrió un error inesperado. Revisa tu conexión.');
     } finally {
       setIsLoading(false);
     }

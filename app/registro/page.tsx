@@ -2,9 +2,12 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { addUser } from '@/app/lib/actions'; // <-- Importamos la acción de registro
 
 export default function RegisterPage() {
   const router = useRouter();
+  
+  // Añadimos 'nombre' al estado, ya que tu esquema lo requiere como username
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -13,6 +16,7 @@ export default function RegisterPage() {
 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -21,46 +25,53 @@ export default function RegisterPage() {
     });
   };
 
-  //intentar enviar el formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(''); // Limpiar errores
-    
-    // Validación básica
-    if (formData.password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
-      return;
-    }
+    setError('');
     setIsLoading(true);
 
     try {
-      // Aquí se conectará con el backend en el futuro
-      console.log('Enviando datos al servidor:', formData);
 
-      // Simulamos de latencia para prueba
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const formDataToSend = new FormData();
+      formDataToSend.append('nombre', formData.nombre);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('password', formData.password);
 
-      // Si hay exito, se redirigfe al login
-      router.push('/login'); 
+   
+      const result = await addUser(formDataToSend);
+
+      if (result.success) {
+        router.push('/login'); 
+      } else {
+        setError(result.message || 'Error al crear la cuenta');
+      }
+      
     } catch (err) {
-      setError('Hubo un error al registrar tu cuenta. Por favor, intenta de nuevo.');
+      console.error(err);
+      setError('Ocurrió un error inesperado. Inténtalo de nuevo.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <main className="flex-grow flex items-center justify-center p-4 bg-gray-50">
+    <main className="grow flex items-center justify-center p-4 bg-gray-50">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-100">
         <h1 className="text-3xl font-extrabold text-center mb-2 text-indigo-700">
           Crear Cuenta
         </h1>
+        <p className="text-center text-gray-500 mb-8 text-sm">
+          Regístrate para empezar a generar tus exámenes
+        </p>
+
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-6 text-sm flex items-center">
-            <span className="font-bold mr-2">Error:</span> {error}
+          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-6 text-sm">
+            {error}
           </div>
         )}
+
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Campo de Nombre de Usuario */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Nombre de usuario
@@ -68,16 +79,15 @@ export default function RegisterPage() {
             <input
               type="text"
               name="nombre"
-              id='nombre'
               value={formData.nombre}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-black"
-              placeholder="Ej. Juan Pérez"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-black"
+              placeholder="Ej. JuanPerez"
               required
             />
           </div>
 
-
+          {/* Campo de Correo Electrónico */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Correo electrónico
@@ -85,16 +95,15 @@ export default function RegisterPage() {
             <input
               type="email"
               name="email"
-              id='email'
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-black"
-              placeholder="usuario@gmail.com"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-black"
+              placeholder="correo@gmail.com"
               required
             />
           </div>
 
-
+          {/* Campo de Contraseña */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Contraseña
@@ -102,12 +111,12 @@ export default function RegisterPage() {
             <input
               type="password"
               name="password"
-              id='password'
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-black"
-              placeholder="••••••••"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-black"
+              placeholder="**********"
               required
+              minLength={6}
             />
           </div>
 
@@ -116,25 +125,18 @@ export default function RegisterPage() {
             disabled={isLoading}
             className={`w-full py-3 px-4 rounded-lg font-bold text-white shadow-md transition-all ${
               isLoading 
-                ? 'bg-indigo-400 cursor-not-allowed scale-95' 
+                ? 'bg-indigo-400 cursor-not-allowed' 
                 : 'bg-indigo-600 hover:bg-indigo-700 active:scale-95'
             }`}
           >
-            {isLoading ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin h-5 w-5 mr-3 border-t-2 border-white rounded-full" viewBox="0 0 24 24"></svg>
-                Procesando...
-              </span>
-            ) : (
-              'Registrarse ahora'
-            )}
+            {isLoading ? 'Creando cuenta...' : 'Registrarse'}
           </button>
         </form>
 
         <div className="mt-8 pt-6 border-t border-gray-100 text-center">
           <p className="text-sm text-gray-600">
             ¿Ya tienes una cuenta?{' '}
-            <a href="/login" className="font-bold text-indigo-600 hover:text-indigo-800 transition-colors">
+            <a href="/login" className="font-bold text-indigo-600 hover:text-indigo-800">
               Inicia sesión aquí
             </a>
           </p>

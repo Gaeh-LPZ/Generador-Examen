@@ -40,7 +40,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex-grow flex items-center justify-center p-4 bg-gray-50">
+    <main className="grow flex items-center justify-center p-4 bg-gray-50">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-100">
         <h1 className="text-3xl font-extrabold text-center mb-2 text-indigo-700">
           Bienvenido

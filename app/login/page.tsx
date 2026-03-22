@@ -7,10 +7,7 @@ import { signIn } from 'next-auth/react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+const [formData, setFormData] = useState({ email: '', password: '' });
 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -37,8 +34,9 @@ export default function LoginPage() {
 
       if (result?.error) {
         setError('Credenciales incorrectas. Revisa tu correo o contraseña.');
-      } else if (result?.ok) {
-        router.push('/profile');
+      } else {
+        router.push('/dashboard');
+        router.refresh(); 
       }
       
     } catch (err) {
@@ -50,14 +48,9 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="grow flex items-center justify-center p-4 bg-gray-50">
+    <main className="flex-grow flex items-center justify-center p-4 bg-gray-50 text-black">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-100">
-        <h1 className="text-3xl font-extrabold text-center mb-2 text-indigo-700">
-          Bienvenido
-        </h1>
-        <p className="text-center text-gray-500 mb-8 text-sm">
-          Ingresa tus datos para acceder a tus exámenes
-        </p>
+        <h1 className="text-3xl font-extrabold text-center mb-6 text-indigo-700">Iniciar Sesión</h1>
 
         {error && (
           <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-6 text-sm">
@@ -67,31 +60,27 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Correo electrónico
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Correo electrónico</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-black"
-              placeholder="correo@gmail.com"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+              placeholder="correo@ejemplo.com"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Contraseña
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Contraseña</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-black"
-              placeholder="**********"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+              placeholder="••••••••"
               required
             />
           </div>
@@ -99,24 +88,17 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 px-4 rounded-lg font-bold text-white shadow-md transition-all ${
-              isLoading 
-                ? 'bg-indigo-400 cursor-not-allowed' 
-                : 'bg-indigo-600 hover:bg-indigo-700 active:scale-95'
+            className={`w-full py-3 rounded-lg font-bold text-white transition-all ${
+              isLoading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
             }`}
           >
-            {isLoading ? 'Iniciando sesión...' : 'Entrar'}
+            {isLoading ? 'Verificando...' : 'Entrar'}
           </button>
         </form>
-
-        <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-          <p className="text-sm text-gray-600">
-            ¿Aún no tienes cuenta?{' '}
-            <a href="/registro" className="font-bold text-indigo-600 hover:text-indigo-800">
-              Regístrate aquí
-            </a>
-          </p>
-        </div>
+        
+        <p className="mt-6 text-center text-sm text-gray-600">
+          ¿No tienes cuenta? <a href="/registro" className="text-indigo-600 font-bold hover:underline">Regístrate</a>
+        </p>
       </div>
     </main>
   );

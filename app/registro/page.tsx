@@ -32,13 +32,13 @@ export default function RegisterPage() {
 
     try {
 
-      const formDataToSend = new FormData();
-      formDataToSend.append('nombre', formData.nombre);
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('password', formData.password);
+      const data = new FormData();
+      data.append('nombre', formData.nombre);
+      data.append('email', formData.email);
+      data.append('password', formData.password);
 
    
-      const result = await addUser(formDataToSend);
+      const result = await addUser(data);
 
       if (result.success) {
         router.push('/login'); 
@@ -55,14 +55,9 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="grow flex items-center justify-center p-4 bg-gray-50">
+    <main className="flex-grow flex items-center justify-center p-4 bg-gray-50 text-black">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-100">
-        <h1 className="text-3xl font-extrabold text-center mb-2 text-indigo-700">
-          Crear Cuenta
-        </h1>
-        <p className="text-center text-gray-500 mb-8 text-sm">
-          Regístrate para empezar a generar tus exámenes
-        </p>
+        <h1 className="text-3xl font-extrabold text-center mb-6 text-indigo-700">Crear Cuenta</h1>
 
         {error && (
           <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-6 text-sm">
@@ -71,65 +66,48 @@ export default function RegisterPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Campo de Nombre de Usuario */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Nombre de usuario
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre de usuario</label>
             <input
               type="text"
               name="nombre"
               value={formData.nombre}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-black"
-              placeholder="Ej. JuanPerez"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
               required
             />
           </div>
-
-          {/* Campo de Correo Electrónico */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Correo electrónico
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Correo electrónico</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-black"
-              placeholder="correo@gmail.com"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
               required
             />
           </div>
-
-          {/* Campo de Contraseña */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              Contraseña
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Contraseña</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-black"
-              placeholder="**********"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
               required
-              minLength={6}
             />
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 px-4 rounded-lg font-bold text-white shadow-md transition-all ${
-              isLoading 
-                ? 'bg-indigo-400 cursor-not-allowed' 
-                : 'bg-indigo-600 hover:bg-indigo-700 active:scale-95'
+            className={`w-full py-3 rounded-lg font-bold text-white ${
+              isLoading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'
             }`}
           >
-            {isLoading ? 'Creando cuenta...' : 'Registrarse'}
+            {isLoading ? 'Registrando...' : 'Registrarse'}
           </button>
         </form>
 

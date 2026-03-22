@@ -18,6 +18,7 @@ model users {
   email       String
   password    String
   score       Int
+  role        String @default("USER")
 }
 
 model questions {

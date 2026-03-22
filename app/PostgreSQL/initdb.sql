@@ -2,8 +2,9 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     email VARCHAR(255) NOT NULL,
-    password VARCHAR(60) NOT NULL,
-    score INT
+    password VARCHAR(255) NOT NULL,
+    score INT,
+    role VARCHAR(10) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS questions (
@@ -13,9 +14,9 @@ CREATE TABLE IF NOT EXISTS questions (
     category VARCHAR(50)
 );
 
-INSERT INTO users(username, email, password, score)
+INSERT INTO users(username, email, password, score, role)
 VALUES
-    ('admin', 'admin@gmail.com','jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=', 100);
+    ('admin', 'admin@gmail.com','$2b$10$hS1QFYHeY/.8lfqpnSRBruHihFN0wYrplENwDvRHCbBbxjPDV7/VG', 100, 'ADMIN');
 
 INSERT INTO questions(question, answer, category)
 VALUES

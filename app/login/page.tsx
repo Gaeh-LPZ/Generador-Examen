@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login } from '@/app/lib/actions'; 
+// 1. Importamos el signIn de next-auth/react (para cliente)
+import { signIn } from 'next-auth/react'; 
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,14 +29,16 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('password', formData.password);
+      const result = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
 
-      const result = await login(formDataToSend);
-
-      if (result && !result.success) {
-        setError(result.message || 'Error al iniciar sesión');
+      if (result?.error) {
+        setError('Credenciales incorrectas. Revisa tu correo o contraseña.');
+      } else if (result?.ok) {
+        router.push('/profile');
       }
       
     } catch (err) {

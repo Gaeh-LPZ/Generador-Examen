@@ -1,31 +1,37 @@
-'use client';
-
 import clsx from "clsx";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { auth } from '@/auth.config';
 
-export default function Header() {
+export default async function Header() {
+    const session = await auth();
+    const isLoggedIn = !!session;
+    // @ts-ignore
+    const isAdmin = session?.user?.role === 'ADMIN';
+
+    // Añadimos una propiedad "show" para evaluar qué se debe mostrar
     const links = [
         {
             name: "Home",
             href: "/",
+            show: true 
         },
         {
             name: "Dashboard",
-            href: "/dashboard"
+            href: "/dashboard",
+            show: isLoggedIn && isAdmin 
         },
         {
             name: "Profile",
-            href: "/profile"
+            href: "/profile",
+            show: isLoggedIn 
         },
         {
             name: "Registro",
-            href: "/registro"
-
+            href: "/registro",
+            show: !isLoggedIn 
         }
-    ]
+    ].filter(link => link.show); 
 
-    const pathname = usePathname();
     return (
         <header className="flex flex-row justify-between border-b p-4 items-center border-gray-200">
             <h1 className="text-lg font-semibold">Cognitive editorial</h1>
@@ -35,10 +41,7 @@ export default function Header() {
                         key={link.name}
                         href={link.href}
                         className={clsx(
-                            'flex h-12 grow items-center justify-center gap-2 rounded-md p-3 text-md font-medium hover:text-indigo-700 md:flex-none md:justify-start md:p-2 md:px-3',
-                            {
-                                'text-indigo-700 underline': pathname === link.href,
-                            },
+                            'flex h-12 grow items-center justify-center gap-2 rounded-md p-3 text-md font-medium hover:text-indigo-700 md:flex-none md:justify-start md:p-2 md:px-3'
                         )}
                     >
                         {link.name}

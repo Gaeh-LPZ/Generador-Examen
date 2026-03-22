@@ -1,4 +1,3 @@
-// auth.ts
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { prisma } from '@/app/lib/prisma';
@@ -16,9 +15,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
+        if (!credentials?.email || !credentials?.password) return null;
 
         const user = await prisma.users.findFirst({
           where: { email: credentials.email as string }
@@ -35,12 +32,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return { 
             id: user.id.toString(), 
             name: user.username, 
-            email: user.email 
+            email: user.email,
+            role: user.role 
           };
         }
 
         return null;
       }
     })
-  ]
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        // @ts-ignore
+        token.role = user.role; 
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session?.user) {
+        // @ts-ignore
+        session.user.role = token.role;
+      }
+      return session;
+    }
+  }
 });

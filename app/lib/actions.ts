@@ -1,3 +1,5 @@
+'use server';
+
 import { prisma } from "./prisma";
 import bcrypt from "bcrypt"
 import { signIn } from '@/auth.config';
@@ -28,23 +30,4 @@ export async function addUser(formData:FormData) {
         console.error('Error creating the user. Error: ', e);
         return { success: false, message: 'Error creating the user'}
     }
-}
-
-export async function login(formData: FormData) {
-  try {
-    await signIn('credentials', formData, { 
-      redirectTo: '/dashboard' 
-    });
-    return { success: true };
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return { success: false, message: 'Credenciales incorrectas.' };
-        default:
-          return { success: false, message: 'Ocurrió un error al iniciar sesión.' };
-      }
-    }
-    throw error;
-  }
 }

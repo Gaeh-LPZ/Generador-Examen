@@ -17,6 +17,11 @@ export default function Header() {
         {
             name: "Profile",
             href: "/profile"
+        },
+        {
+            name: "Registro",
+            href: "/registro"
+
         }
     ]
 

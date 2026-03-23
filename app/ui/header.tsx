@@ -48,7 +48,7 @@ export default async function Header() {
                     </Link>
                 ))}
             </nav>
-            <button type="button" className="bg-indigo-700 text-white p-2 rounded-md cursor-pointer hover:scale-105 transition-all transform">Create exam</button>
+            <Link href="/juego" type="button" className="bg-indigo-700 text-white p-2 rounded-md cursor-pointer hover:scale-105 transition-all transform">Create exam</Link>
         </header>
     );
 }
